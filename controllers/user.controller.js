@@ -1,5 +1,5 @@
-const prisma = require('../DB/db.config');
-const bcrypt = require('bcryptjs');
+const prisma = require("../DB/db.config");
+const bcrypt = require("bcryptjs");
 
 // Create a new user
 const createUser = async (req, res) => {
@@ -10,7 +10,7 @@ const createUser = async (req, res) => {
     const existingUser = await prisma.user.findUnique({ where: { email } });
 
     if (existingUser) {
-      return res.status(400).json({ message: 'Email already exists' });
+      return res.status(400).json({ message: "Email already exists" });
     }
 
     // Hash the password before saving
@@ -25,10 +25,12 @@ const createUser = async (req, res) => {
       },
     });
 
-    return res.status(201).json({ message: 'User created successfully', newUser });
+    return res
+      .status(201)
+      .json({ message: "User created successfully", newUser });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Something went wrong' });
+    return res.status(500).json({ message: "Something went wrong" });
   }
 };
 
@@ -36,28 +38,28 @@ const createUser = async (req, res) => {
 const getAllUsers = async (req, res) => {
   try {
     const users = await prisma.user.findMany();
-    return res.status(200).json({ message: 'All users data', users });
+    return res.status(200).json({ message: "All users data", users });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Error fetching users' });
+    return res.status(500).json({ message: "Error fetching users" });
   }
 };
 
 // Fetch user by unique ID
 const getUserById = async (req, res) => {
   const userId = Number(req.params.id);
-  
+
   try {
     const user = await prisma.user.findUnique({ where: { id: userId } });
-    
+
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
-    return res.status(200).json({ message: 'User data', user });
+    return res.status(200).json({ message: "User data", user });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Error fetching user' });
+    return res.status(500).json({ message: "Error fetching user" });
   }
 };
 
@@ -70,7 +72,7 @@ const updateUser = async (req, res) => {
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
     if (!user) {
-      return res.status(404).json({ message: 'User not found' });
+      return res.status(404).json({ message: "User not found" });
     }
 
     // Update user data
@@ -79,10 +81,12 @@ const updateUser = async (req, res) => {
       data: { name, email, password },
     });
 
-    return res.status(200).json({ message: 'User updated successfully', updatedUser });
+    return res
+      .status(200)
+      .json({ message: "User updated successfully", updatedUser });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Error updating user' });
+    return res.status(500).json({ message: "Error updating user" });
   }
 };
 
@@ -95,11 +99,37 @@ const deleteUser = async (req, res) => {
       where: { id: userId },
     });
 
-    return res.status(200).json({ message: 'User deleted successfully', deletedUser });
+    return res
+      .status(200)
+      .json({ message: "User deleted successfully", deletedUser });
   } catch (error) {
     console.error(error);
-    return res.status(500).json({ message: 'Error deleting user' });
+    return res.status(500).json({ message: "Error deleting user" });
   }
 };
 
-module.exports = { createUser, updateUser, getAllUsers, getUserById, deleteUser };
+// get My Post
+const fetchuserWithPost = async(req, res) => {
+  try {
+    const userdata = await prisma.user.findMany({
+      include:{
+        post:true
+      }
+    })
+    return res.status(200).json({
+      message:"All data with post",
+      userdata
+    })
+  } catch (error) {
+    console.log(error, "error");
+    
+  }
+}
+module.exports = {
+  createUser,
+  updateUser,
+  getAllUsers,
+  getUserById,
+  deleteUser,
+  fetchuserWithPost
+};
