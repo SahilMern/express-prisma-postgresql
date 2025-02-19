@@ -37,7 +37,17 @@ const getAllPosts = async (req, res) => {
   try {
     const posts = await prisma.post.findMany({
       include: {
-        user: true, // To include the user details along with the post
+        user: true,
+        comment:{
+          include:{
+            // user:true
+            user:{
+              select:{
+                name:true
+              }
+            }
+          }
+        } // To include the user details along with the post
       },
     });
     return res.status(200).json({ message: "All posts", posts });

@@ -120,9 +120,9 @@ const fetchuserWithPost = async(req, res) => {
       //     }
       //   }
       // }
-      where:{
-        post:post_c
-      }
+      // where:{
+      //   post:post_c
+      // }
     })
     return res.status(200).json({
       message:"All data with post",
