@@ -48,7 +48,6 @@ const getAllUsers = async (req, res) => {
 // Fetch user by unique ID
 const getUserById = async (req, res) => {
   const userId = Number(req.params.id);
-
   try {
     const user = await prisma.user.findUnique({ where: { id: userId } });
 
@@ -112,8 +111,17 @@ const deleteUser = async (req, res) => {
 const fetchuserWithPost = async(req, res) => {
   try {
     const userdata = await prisma.user.findMany({
-      include:{
-        post:true
+      // include:{
+      //   // post:true
+      //   post:{
+      //     select:{
+      //       title:true,
+      //       comment_count:true
+      //     }
+      //   }
+      // }
+      where:{
+        post:post_c
       }
     })
     return res.status(200).json({
